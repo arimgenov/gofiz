@@ -25,7 +25,7 @@ void make_iter(double* next, double* data) {
 
 void write_to_file(double* data, char* filename) {
     std::ofstream out(filename);
-    for (int k=0; k<K; k++) out << data[k] << std::endl;
+    for (int k=0; k<K; k++) out << data[k] << std::endl; // функция записи в файл
     out.close();
 }
 
@@ -33,7 +33,6 @@ int main() {
 
     auto data = new double[K];
     auto next = new double[K];
-
     set_initials(data);
 
     for(int i=0; i<N; i++) {
@@ -47,5 +46,5 @@ int main() {
         }
     }
 
-  return 0;
+    return 0;
 }
