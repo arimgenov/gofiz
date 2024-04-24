@@ -114,7 +114,7 @@ int main() {
 
         if (i % step == 0) {
             char filename[30];
-            sprintf(filename, "D:/VisCode/gofiz-1/data/out_%03d.dat", i); // запись в файл
+            sprintf(filename, "D:/VisCode/gofiz/data/out_%03d.dat", i); // запись в файл
             write_to_file(data, filename);
         }
     }

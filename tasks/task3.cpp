@@ -4,9 +4,9 @@
 
 const int step = 10;
 const int N = 1000, K_x = 100, K_y = 100; // K - размер пространства
-const int P_x = 10, P_y = 10; // размеры скорости
+const int P_x = 5, P_y = 5; // размеры скорости
 const int a = 20, c_x = 50, c_y = 50; // c-положение пика
-const int p0_x = 5, p0_y = 2; // начальные скорости
+const int p0_x = 3, p0_y = 2; // начальные скорости
 
 const double dv_x = 5.0/P_x, dv_y= 5.0/P_y;
 
@@ -103,7 +103,7 @@ int main() {
 
         if (i % step == 0) {
             char filename[30];
-            sprintf(filename, "D:/VisCode/gofiz-1/data/out_%03d.dat", i); // запись в файл
+            sprintf(filename, "D:/VisCode/gofiz/data/out_%03d.dat", i); // запись в файл
             write_to_file(data, filename);
         }
     }

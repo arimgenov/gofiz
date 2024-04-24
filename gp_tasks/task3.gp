@@ -1,6 +1,6 @@
 count = 990
 step = 10
-max_z = 0.5
+max_z = 0.7
 
 set xrange [0:100]
 set yrange [0:100]

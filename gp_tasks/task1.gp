@@ -7,6 +7,6 @@ set yrange [0:1.5]
 set output "gifs/task_1.gif"
 
 do for [n = 0 : count : step] {
-    filename = sprintf("D:/VisCode/gofiz-1/data/out_%03d.dat", n)
+    filename = sprintf("data/out_%03d.dat", n)
     plot filename with lines title ""
 }
