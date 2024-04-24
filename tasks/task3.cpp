@@ -36,16 +36,20 @@ void make_iter_x(double* next, double* data) {
         } else {
             if (k_x == K_x-1) continue;
             else next[index(k_x,k_y,p_x,p_y)] = data[index(k_x,k_y,p_x,p_y)] - gam * (data[index(k_x+1,k_y,p_x,p_y)] - data[index(k_x,k_y,p_x,p_y)]);
-        }   
+        }
     }
 } } } }
-    //зеркальное граничное уловие
+    // зеркальное граничное уловие
     for (int p_y = -P_y; p_y <= P_y; p_y++) {for (int p_x = -P_x; p_x <= P_x; p_x++) {for(int k_y = 0; k_y < K_y; k_y++) {
     {
         if (p_x > 0) next[index(0,k_y,p_x,p_y)] = next[index(0,k_y,-p_x,p_y)];
         else next[index(K_x-1,k_y,p_x,p_y)] = data[index(K_x-1,k_y,-p_x,p_y)];
     }
 } } }
+    // диффузное граничное условие
+
+
+
 }
 
 void make_iter_y(double* next, double* data) {
