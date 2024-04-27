@@ -6,16 +6,16 @@ const int step = 10;
 const int N = 1500, K_x = 100, K_y = 100; // K - размер пространства
 const int P_x = 13, P_y = 13; // размеры скорости
 const int a = 20, c_x = 50, c_y = 50; // c-положение пика
-const int p0_x = 2, p0_y = 0; // начальные скорости
+const int p0_x = 3, p0_y = 2; // начальные скорости
 
 const double dv_x = 5.0/P_x, dv_y= 5.0/P_y;
 
-const int wrx[] = {0, 20, 20}; const int wrx_b[] = {0, 52, 0}; const int wrx_e[] = {K_y-1, K_y-1, 48}; 
-const int wlx[] = {K_x-1, 19, 19}; const int wlx_b[] = {0, 52, 0}; const int wlx_e[] = {K_y-1, K_y-1, 48};
-const int wuy[] = {0, 48}; const int wuy_b[] = {0, 19}; const int wuy_e[] = {K_x-1, 20};
-const int wdy[] = {K_y-1, 52}; const int wdy_b[] = {0, 19}; const int wdy_e[] = {K_x-1, 20};
+const int wrx[] = {0, 20, 20}; const int wrx_b[] = {0, 55, 0}; const int wrx_e[] = {K_y-1, K_y-1, 45}; 
+const int wlx[] = {K_x-1, 19, 19}; const int wlx_b[] = {0, 55, 0}; const int wlx_e[] = {K_y-1, K_y-1, 45};
+const int wuy[] = {0, 45}; const int wuy_b[] = {0, 19}; const int wuy_e[] = {K_x-1, 20};
+const int wdy[] = {K_y-1, 55}; const int wdy_b[] = {0, 19}; const int wdy_e[] = {K_x-1, 20};
 
-int index(int k_x, int k_y, int p_x, int p_y) {             
+int index(int k_x, int k_y, int p_x, int p_y) {
     return (p_y + P_y) * (2 * P_x + 1) * K_x * K_y
     + (p_x + P_x) * K_x * K_y
     + k_y * K_x
