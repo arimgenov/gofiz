@@ -11,8 +11,8 @@ const int a = 10, c_x = 20, c_y = 50;
 const int p0_x = 1, p0_y = 0; // начальные скорости
 const double dv_x = 5.0 / P_x, dv_y = 5.0 / P_y;
 
-const int wallStart = 50, wallEnd = 52; // координаты стены
-const int holeStart = 48, holeEnd = 52;
+const int wallStart = 0, wallEnd = 0; // координаты стены
+const int holeStart = 0, holeEnd = 0;
 
 // geometry
 bool* skipMaskX;
@@ -32,7 +32,7 @@ const Segment wallLeftX[] = {
         {wallStart, holeEnd + 1,   K_y},
         {wallEnd,   0,               holeStart + 1},
         {wallEnd,   holeEnd + 1, K_y},
-//        {K_x - 1,   0, K_y}
+        {K_x - 1,   0, K_y}
 };
 const Segment wallUpY[] = {
         {0,             0,             wallEnd + 1},
@@ -103,16 +103,25 @@ double initial(int k_x, int k_y, int p_x, int p_y) {
     else return 1e-9;
 }
 
-void set_initials(double data[]) {
-    for (int p_y = -P_y; p_y <= P_y; p_y++) {
-        for (int p_x = -P_x; p_x <= P_x; p_x++) {
-            for (int k_y = 0; k_y < K_y; k_y++) {
-                for (int k_x = 0; k_x < K_x; k_x++) {
-                    data[index(k_x, k_y, p_x, p_y)] = initial(k_x, k_y, p_x, p_y);
-                }
-            }
-        }
+// void set_initials(double data[]) {
+//     for (int p_y = -P_y; p_y <= P_y; p_y++) {
+//         for (int p_x = -P_x; p_x <= P_x; p_x++) {
+//             for (int k_y = 0; k_y < K_y; k_y++) {
+//                 for (int k_x = 0; k_x < K_x; k_x++) {
+//                     data[index(k_x, k_y, p_x, p_y)] = initial(k_x, k_y, p_x, p_y);
+//                 }
+//             }
+//         }
+//     }
+// }
+
+void set_initials(double* data) {
+    for (int p_y = -P_y; p_y <= P_y; p_y++) {for (int p_x = -P_x; p_x <= P_x; p_x++) {for(int k_y = 0; k_y < K_y; k_y++) {for(int k_x = 0; k_x < K_x; k_x++) {
+    {
+        if (p_x == p0_x and p_y == p0_y) data[index(k_x,k_y,p_x,p_y)] = std::exp(-1. * ((k_x-c_x)*(k_x-c_x) + (k_y-c_y)*(k_y-c_y))/(1.*a*a));
+        else data[index(k_x,k_y,p_x,p_y)] = 1e-9;
     }
+    } } } }
 }
 
 double calculate_denom_x() {
@@ -166,15 +175,15 @@ void make_iteration_x(double next[], double data[]) {
 //        }
 //    }
 
-    for (int p_y = -P_y; p_y <= P_y; p_y++) {
-        for (int p_x = -P_x; p_x <= P_x; p_x++) {
-            for (int k_y = 0; k_y < K_y; k_y++) {
-                if (p_x < 0) {
-                    next[index(K_x - 1, k_y, p_x, p_y)] = next[index(K_x - 1, k_y, -p_x, p_y)];
-                }
-            }
-        }
-    }
+    // for (int p_y = -P_y; p_y <= P_y; p_y++) {
+    //     for (int p_x = -P_x; p_x <= P_x; p_x++) {
+    //         for (int k_y = 0; k_y < K_y; k_y++) {
+    //             if (p_x < 0) {
+    //                 next[index(K_x - 1, k_y, p_x, p_y)] = next[index(K_x - 1, k_y, -p_x, p_y)];
+    //             }
+    //         }
+    //     }
+    // }
 
     // Mirror reflection
 //    for (Segment s: wallRightX) {
@@ -276,17 +285,17 @@ void make_iteration_y(double next[], double data[]) {
 //        }
 //    }
 
-    for (int p_y = -P_y; p_y <= P_y; p_y++) {
-        for (int p_x = -P_x; p_x <= P_x; p_x++) {
-            for (int k_x = wallEnd + 1; k_x < K_x; k_x++) {
-                if (p_y > 0) {
-                    next[index(k_x, 0, p_x, p_y)] = next[index(k_x, 0, p_x, -p_y)];
-                } else {
-                    next[index(k_x, K_y - 1, p_x, p_y)] = next[index(k_x, K_y - 1, p_x, -p_y)];
-                }
-            }
-        }
-    }
+    // for (int p_y = -P_y; p_y <= P_y; p_y++) {
+    //     for (int p_x = -P_x; p_x <= P_x; p_x++) {
+    //         for (int k_x = wallEnd + 1; k_x < K_x; k_x++) {
+    //             if (p_y > 0) {
+    //                 next[index(k_x, 0, p_x, p_y)] = next[index(k_x, 0, p_x, -p_y)];
+    //             } else {
+    //                 next[index(k_x, K_y - 1, p_x, p_y)] = next[index(k_x, K_y - 1, p_x, -p_y)];
+    //             }
+    //         }
+    //     }
+    // }
 
     // Mirror reflection
 //    for (Segment s: wallUpY) {

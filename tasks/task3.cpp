@@ -3,17 +3,22 @@
 #include <iostream>
 
 const int step = 10;
-const int N = 1500, K_x = 100, K_y = 100; // K - размер пространства
-const int P_x = 13, P_y = 13; // размеры скорости
-const int a = 20, c_x = 50, c_y = 50; // c-положение пика
-const int p0_x = 3, p0_y = 2; // начальные скорости
+const int N = 700, K_x = 100, K_y = 100; // K - размер пространства
+const int P_x = 20, P_y = P_x; // размеры скорости
+const int a = 10, c_x = 50, c_y = 50; // c-положение пика
+const int p0_x = 2, p0_y = 0; // начальные скорости
 
 const double dv_x = 5.0/P_x, dv_y= 5.0/P_y;
 
-const int wrx[] = {0, 20, 20}; const int wrx_b[] = {0, 55, 0}; const int wrx_e[] = {K_y-1, K_y-1, 45}; 
-const int wlx[] = {K_x-1, 19, 19}; const int wlx_b[] = {0, 55, 0}; const int wlx_e[] = {K_y-1, K_y-1, 45};
-const int wuy[] = {0, 45}; const int wuy_b[] = {0, 19}; const int wuy_e[] = {K_x-1, 20};
-const int wdy[] = {K_y-1, 55}; const int wdy_b[] = {0, 19}; const int wdy_e[] = {K_x-1, 20};
+const int ws = 49, we = 50; // координаты стены
+const int rs = 49, re = 50;
+const int hs = 39, he = 61;
+// const int ts = 40, te = 60;
+
+const int wrx[] = {0, we, we, re, re}; const int wrx_b[] = {0, he, 0, he, 0}; const int wrx_e[] = {K_y-1, K_y-1, hs, K_y-1, hs}; 
+const int wlx[] = {ws, ws, rs, rs}; const int wlx_b[] = {he, 0, he, 0}; const int wlx_e[] = {K_y-1, hs, K_y-1, hs};
+const int wuy[] = {0, hs, he+1}; const int wuy_b[] = {0, ws, ws}; const int wuy_e[] = {K_x-1, re, re};
+const int wdy[] = {K_y-1, he, hs-1}; const int wdy_b[] = {0, ws, ws}; const int wdy_e[] = {K_x-1, re, re};
 
 int index(int k_x, int k_y, int p_x, int p_y) {
     return (p_y + P_y) * (2 * P_x + 1) * K_x * K_y
@@ -22,11 +27,20 @@ int index(int k_x, int k_y, int p_x, int p_y) {
     + k_x;
 }
 
-void set_initials(double* data) {
+void set_initials1(double* data) {
     for (int p_y = -P_y; p_y <= P_y; p_y++) {for (int p_x = -P_x; p_x <= P_x; p_x++) {for(int k_y = 0; k_y < K_y; k_y++) {for(int k_x = 0; k_x < K_x; k_x++) {
     {
-        if (p_x == p0_x and p_y == p0_y) data[index(k_x,k_y,p_x,p_y)] = std::exp(-1. * ((k_x-c_x)*(k_x-c_x) + (k_y-c_y)*(k_y-c_y))/(1.*a*a));
+        if (p_x == p0_x and p_y == p0_y) data[index(k_x,k_y,p_x,p_y)] = std::exp(-1.*((k_x-c_x)*(k_x-c_x)+(k_y-c_y)*(k_y-c_y))/(1.*a*a));
         else data[index(k_x,k_y,p_x,p_y)] = 1e-9;
+    }
+    } } } }
+}
+
+void set_initials2(double* data, bool f) {
+    for (int p_y = -P_y; p_y <= P_y; p_y++) {for (int p_x = -P_x; p_x <= P_x; p_x++) {for(int k_y = 0; k_y < K_y; k_y++) {for(int k_x = 0; k_x < K_x; k_x++) {
+    {
+        if (k_x < ws) data[index(k_x,k_y,p_x,p_y)] = std::exp(-((p_x * dv_x) * (p_x * dv_x) + (p_y * dv_y) * (p_y * dv_y)) / 2.);
+        else if (f) data[index(k_x,k_y,p_x,p_y)] = 1e-9;
     }
     } } } }
 }
@@ -136,6 +150,16 @@ void make_iter_y(double* next, double* data) {
     }
 }
 
+
+void write_total_count(char *filename, double total, int i) {
+    std::ofstream f;
+    if (i == 0) f.open(filename);
+    else f.open(filename, std::ios_base::app);
+
+    f << total << std::endl;
+    f.close();
+}
+
 void write_to_file(double* data, char* filename) {
     std::ofstream out(filename);
     
@@ -158,19 +182,30 @@ int main() {
     auto size = K_x*K_y*(2*P_x+1)*(2*P_y+1);
     auto data = new double[size];
     auto next = new double[size];
-    
-    set_initials(data);
+    double total = 0;
+    double total_next = 0;
+    for (int k_x = 0; k_x <= we; k_x++) for (int k_y = 0; k_y < K_y; k_y++) for (int p_y = -P_y; p_y <= P_y; p_y++) for (int p_x = -P_x; p_x <= P_x; p_x++) total += data[index(k_x, k_y, p_x, p_y)];
+
+    set_initials2(data, true);
 
     for(int i=0; i<N; i++) {
         make_iter_x(next, data);
         std::swap(next, data);
         make_iter_y(next, data);
         std::swap(next, data);
+        // set_initials2(data, false);
 
         if (i % step == 0) {
-            char filename[30];
-            sprintf(filename, "D:/VisCode/gofiz/data/out_%03d.dat", i); // запись в файл
+            char filename[50];
+            sprintf(filename, "data/task3/out_%03d.dat", i); // запись в файл
             write_to_file(data, filename);
+
+            total_next = 0;
+            for (int k_x = 0; k_x <= we; k_x++) for (int k_y = 0; k_y < K_y; k_y++) for (int p_y = -P_y; p_y <= P_y; p_y++) for (int p_x = -P_x; p_x <= P_x; p_x++) total_next += data[index(k_x, k_y, p_x, p_y)];
+
+            char totalFilename[50] = "data/final_count/total_count.dat";
+            write_total_count(totalFilename, total-total_next, i);
+            total = total_next;
         }
     }
     
