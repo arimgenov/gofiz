@@ -17,8 +17,8 @@ const int hs = 39, he = 61;
 
 const int wrx[] = {0, we, we, re, re}; const int wrx_b[] = {0, he, 0, he, 0}; const int wrx_e[] = {K_y-1, K_y-1, hs, K_y-1, hs}; 
 const int wlx[] = {ws, ws, rs, rs}; const int wlx_b[] = {he, 0, he, 0}; const int wlx_e[] = {K_y-1, hs, K_y-1, hs};
-const int wuy[] = {0, hs, he+1}; const int wuy_b[] = {0, ws, ws}; const int wuy_e[] = {K_x-1, re, re};
-const int wdy[] = {K_y-1, he, hs-1}; const int wdy_b[] = {0, ws, ws}; const int wdy_e[] = {K_x-1, re, re};
+const int wuy[] = {0, hs, he+1}; const int wuy_b[] = {0, ws, ws}; const int wuy_e[] = {we, re, re};
+const int wdy[] = {K_y-1, he, hs-1}; const int wdy_b[] = {0, ws, ws}; const int wdy_e[] = {we, re, re};
 
 int index(int k_x, int k_y, int p_x, int p_y) {
     return (p_y + P_y) * (2 * P_x + 1) * K_x * K_y

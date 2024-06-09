@@ -1,6 +1,6 @@
 count = 700
 step = 10
-max_z = 10
+max_z = 3
 
 set xrange [0:100]
 set yrange [0:100]
