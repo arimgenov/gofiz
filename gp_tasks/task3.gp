@@ -1,6 +1,6 @@
-count = 700
+count = 1500
 step = 10
-max_z = 3
+max_z = 0.005
 
 set xrange [0:100]
 set yrange [0:100]
@@ -13,7 +13,7 @@ set view map
 
 set term gif animate delay 10 size 2000, 1000
 
-set output "gifs/aperture_6.gif"
+set output "gifs/random.gif"
 
 do for [n=0 : count-1 : step] {
     filename = sprintf("data/task3/out_%03d.dat", n)
